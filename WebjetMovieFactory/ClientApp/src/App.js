@@ -56,12 +56,22 @@ class App extends Component {
 
         console.log(cheapMovies);
 
-        return (
-            <div className='App'>
-                <h1>Cheap Movies</h1>  
-                <MovieList movies={cheapMovies} />  
-            </div>
-        );
+        if ((cheapMovies) && (cheapMovies.length > 0)) {
+            return (
+                <div className='App'>
+                    <h1>Cheap Movies</h1>
+                    <MovieList movies={cheapMovies} />
+                </div>
+            );
+        } else {
+            return (
+                <div className='App'>
+                    <h1>No movies available</h1>
+                </div>
+            );
+        }
+             
+        
     }
 
 }
