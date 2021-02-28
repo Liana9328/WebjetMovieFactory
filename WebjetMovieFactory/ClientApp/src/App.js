@@ -1,20 +1,69 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
+import _ from 'lodash';
+import './App.css';
+import { MovieList } from './components/MovieList/movie-list.component';
 
-export default class App extends Component {
-  displayName = App.name
+class App extends Component {
+    constructor() {
+        super();
 
-  render() {
-    return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetchdata' component={FetchData} />
-      </Layout>
-    );
-  }
+        this.state = {
+            moviesList: []
+        };
+    }
+
+    componentDidMount() {
+        this.getAllMovies()
+    }
+
+    getAllMovies() {
+        const _this = this;
+   
+        var urls = [
+            '/api/cinemaworld/movies',
+            '/api/filmworld/movies'
+        ];
+
+        var requests = urls.map(function (url) {
+            return fetch(url)
+                .then(function (response) {
+                    // throw "uh oh!";  - test a failure
+                    return response.json();
+                })
+                .then((data) => {
+                    _this.setState(state => state.moviesList.push(data));
+                })
+        });
+
+        Promise.allSettled(requests)
+            .then((results) => {
+                console.log(JSON.stringify(results, null, 2));
+            }).catch(function (err) {
+                console.log(err);
+            })
+    }
+
+
+    render() {
+
+        const { moviesList } = this.state; 
+
+        const cheapMovies = _(moviesList.flat())
+            .groupBy('Name')
+            .map((group) => _.minBy(group, 'Price'))
+            .sortBy('Year')
+            .value();
+
+        console.log(cheapMovies);
+
+        return (
+            <div className='App'>
+                <h1>Cheap Movies</h1>  
+                <MovieList movies={cheapMovies} />  
+            </div>
+        );
+    }
+
 }
+
+export default App;

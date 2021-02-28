@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using WebjetMovieFactory.Services;
 using WebjetMovieFactory.Services.Interfaces;
 
@@ -31,7 +32,7 @@ namespace WebjetMovieFactory.Controllers
                 return NotFound();
             }
 
-            return Ok(movies);
+            return Ok(JsonConvert.SerializeObject(movies));
         }
 
         [HttpGet("{source}/movie/{Id}")]
@@ -44,7 +45,7 @@ namespace WebjetMovieFactory.Controllers
                 return NotFound();
             }
 
-            return Ok(movie);
+            return Ok(JsonConvert.SerializeObject(movie));
         }
 
     }
