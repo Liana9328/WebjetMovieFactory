@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using WebjetMovieFactory.Controllers.ActionFilter;
 using WebjetMovieFactory.Services;
 using WebjetMovieFactory.Services.Interfaces;
 
@@ -13,13 +11,16 @@ namespace WebjetMovieFactory.Controllers
 {
     [Route("api")]
     [ApiController]
+    [ServiceFilter(typeof(TokenAuthenticate))]
     public class MovieController : Controller
     {
-        private readonly MovieService _movieService;
+        private readonly IMovieService _movieService;
+        private readonly ILogger<MovieController> _logger;
 
-        public MovieController(MovieService movieService)
+        public MovieController(IMovieService movieService, ILogger<MovieController> logger)
         {
             _movieService = movieService;
+            _logger = logger;
         }
 
         [HttpGet("{source}/movies")]
@@ -29,6 +30,8 @@ namespace WebjetMovieFactory.Controllers
 
             if (movies == null)
             {
+                _logger.LogError($"No movies returned from {source}");
+
                 return NotFound();
             }
 
@@ -42,6 +45,8 @@ namespace WebjetMovieFactory.Controllers
 
             if (movie == null)
             {
+                _logger.LogError($"Movie {Id} not returned from {source}");
+
                 return NotFound();
             }
 

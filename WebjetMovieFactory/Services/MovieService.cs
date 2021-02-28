@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebjetMovieFactory.DataLayer.DataModels;
 using WebjetMovieFactory.DataLayer.Interfaces;
 using WebjetMovieFactory.Services.Interfaces;

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebjetMovieFactory.Controllers.ActionFilter;
 using WebjetMovieFactory.DataLayer;
 using WebjetMovieFactory.DataLayer.DataModels;
 using WebjetMovieFactory.DataLayer.Interfaces;
@@ -16,11 +17,8 @@ namespace WebjetMovieFactory
 {
     public class Startup
     {
-        private const string CinemaWorld = "cinemaworld";
-        private const string FilmWorld = "filmworld";
-
         public Startup(IConfiguration configuration)
-        {
+        { 
             Configuration = configuration;
         }
 
@@ -38,11 +36,11 @@ namespace WebjetMovieFactory
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.Configure<MyAppSettings>(Configuration);
-
             services.AddSingleton<IDataAccessor, MovieDataAccessor>();
 
-            services.AddTransient<MovieService>();
+            services.AddTransient<IMovieService, MovieService>();
+
+            services.AddScoped<TokenAuthenticate>();
 
             services.AddSwaggerGen();
 
@@ -83,6 +81,8 @@ namespace WebjetMovieFactory
             });
 
             app.UseSwagger();
+
+            app.UseMiddleware<TokenInHeaderMiddleware>();
         }
     }
 }
