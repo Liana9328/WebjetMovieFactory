@@ -36,11 +36,15 @@ namespace WebjetMovieFactory
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddMemoryCache();
+
             services.AddSingleton<IDataAccessor, MovieDataAccessor>();
 
-            services.AddTransient<IMovieService, MovieService>();
+            services.AddScoped<IMovieService, MovieService>();
 
-            services.AddScoped<TokenAuthenticate>();
+            services.AddScoped<ICacheService, CacheService>();
+
+            services.AddScoped<ResponseExceptionFilter>();
 
             services.AddSwaggerGen();
 
@@ -82,7 +86,6 @@ namespace WebjetMovieFactory
 
             app.UseSwagger();
 
-            app.UseMiddleware<TokenInHeaderMiddleware>();
         }
     }
 }

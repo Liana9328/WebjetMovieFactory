@@ -8,9 +8,9 @@ namespace WebjetMovieFactory.Services.Interfaces
 {
     public interface IMovieService
     {
-       IList<Movie> GetMovies(string source);
+        Task<IList<Movie>> GetMoviesAsync(string source);
 
-       Movie GetMovieById(string source, int id);
+        Task<Movie> GetMovieByIdAsync(string source, string id);
 
     }
 }

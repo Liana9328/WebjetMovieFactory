@@ -8,55 +8,83 @@ class App extends Component {
         super();
 
         this.state = {
+            dataLoading: false,
             moviesList: []
         };
     }
 
-    componentDidMount() {
-        this.getAllMovies()
-    }
+    async componentDidMount() {
+        let dataList = [];
 
-    getAllMovies() {
-        const _this = this;
-   
-        var urls = [
-            '/api/cinemaworld/movies',
-            '/api/filmworld/movies'
+        const movieSource = [
+            'cinemaworld', 'filmworld'
         ];
 
-        var requests = urls.map(function (url) {
-            return fetch(url)
-                .then(function (response) {
-                    // throw "uh oh!";  - test a failure
-                    return response.json();
-                })
-                .then((data) => {
-                    _this.setState(state => state.moviesList.push(data));
-                })
-        });
+        Promise.allSettled(movieSource.map(source =>
+            fetch(`/api/${source}/movies`)
+                .then(checkStatus)
+                .then(parseJSON)
+                .then(data => {
 
-        Promise.allSettled(requests)
-            .then((results) => {
-                console.log(JSON.stringify(results, null, 2));
-            }).catch(function (err) {
-                console.log(err);
-            })
+                    Promise.allSettled(data.map(item =>
+                        fetch(`/api/${source}/movie/${item.ID}`)
+                            .then(checkStatus)
+                            .then(parseJSON)
+                            .then(data => {
+                                dataList.push(data);
+
+                                this.setState({
+                                    moviesList: dataList,
+                                    dataLoading: true
+                                })
+                            })
+                            .catch(error => console.log(error))
+                    ));
+
+
+
+                })
+                .catch(error => console.log(error))
+        ))
+       
+
+        function checkStatus(response) {
+            if (response.ok) {
+                return Promise.resolve(response);
+            } else {
+                
+                return Promise.reject(new Error(response.statusText));
+            }
+        }
+
+        function parseJSON(response) {
+            return response.json();
+        }
     }
 
 
     render() {
 
-        const { moviesList } = this.state; 
+        const { dataLoading, moviesList } = this.state; 
 
         const cheapMovies = _(moviesList.flat())
-            .groupBy('Name')
+            .groupBy('Title')
             .map((group) => _.minBy(group, 'Price'))
             .sortBy('Year')
             .value();
 
+        cheapMovies.filter(x => x !== undefined);
         console.log(cheapMovies);
 
-        if ((cheapMovies) && (cheapMovies.length > 0)) {
+        if (dataLoading === false) {
+            return (
+                <div className='App'>
+                    <h1>Loading......</h1>
+                </div>
+            );
+        }
+
+        if ((cheapMovies) && (cheapMovies.length > 0) && (cheapMovies[0])) {
             return (
                 <div className='App'>
                     <h1>Cheap Movies</h1>
@@ -66,12 +94,10 @@ class App extends Component {
         } else {
             return (
                 <div className='App'>
-                    <h1>No movies available</h1>
+                    <h1>No Movies Available</h1>
                 </div>
             );
-        }
-             
-        
+        }                
     }
 
 }
