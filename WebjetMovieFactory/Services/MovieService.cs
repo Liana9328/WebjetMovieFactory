@@ -96,7 +96,7 @@ namespace WebjetMovieFactory.Services
                 }
             }
 
-            _cacheService.SetCache<Movie>(id, cachedMovie);
+            _cacheService.SetCache<Movie>(id, selectedMovie);
 
             return selectedMovie;
         }
