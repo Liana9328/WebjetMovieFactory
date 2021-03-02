@@ -1,15 +1,8 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebjetMovieFactory.Controllers.ActionFilter;
-using WebjetMovieFactory.DataLayer.DataModels;
-using WebjetMovieFactory.Services;
 using WebjetMovieFactory.Services.Interfaces;
 
 namespace WebjetMovieFactory.Controllers

@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebjetMovieFactory.Controllers.ActionFilter;
-using WebjetMovieFactory.DataLayer;
-using WebjetMovieFactory.DataLayer.DataModels;
-using WebjetMovieFactory.DataLayer.Interfaces;
 using WebjetMovieFactory.Services;
 using WebjetMovieFactory.Services.Interfaces;
 
@@ -37,8 +33,6 @@ namespace WebjetMovieFactory
             });
 
             services.AddMemoryCache();
-
-            services.AddSingleton<IDataAccessor, MovieDataAccessor>();
 
             services.AddScoped<IMovieService, MovieService>();
 

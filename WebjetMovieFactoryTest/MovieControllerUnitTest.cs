@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebjetMovieFactory.Controllers;
-using WebjetMovieFactory.DataLayer.DataModels;
+using WebjetMovieFactory.Entities.DataModels;
 using WebjetMovieFactory.Services.Interfaces;
 using Xunit;
 

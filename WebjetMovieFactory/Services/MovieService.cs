@@ -5,8 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using WebjetMovieFactory.DataLayer.DataModels;
-using WebjetMovieFactory.DataLayer.Interfaces;
+using WebjetMovieFactory.Entities.DataModels;
 using WebjetMovieFactory.Services.Interfaces;
 
 namespace WebjetMovieFactory.Services
